@@ -21,6 +21,14 @@ var countries = [
   }
 ];
 
+function Home$Placeholder(Props) {
+  return React.createElement("p", undefined, "Search...");
+}
+
+var Placeholder = {
+  make: Home$Placeholder
+};
+
 function Home(Props) {
   return React.createElement("div", {
               className: styles.main
@@ -28,7 +36,8 @@ function Home(Props) {
                   multi: false,
                   options: countries,
                   components: {
-                    DropdownIndicator: undefined
+                    DropdownIndicator: null,
+                    Placeholder: Home$Placeholder
                   }
                 }));
 }
@@ -38,6 +47,7 @@ var make = Home;
 export {
   styles ,
   countries ,
+  Placeholder ,
   make ,
 }
 /* styles Not a pure module */
