@@ -1,0 +1,38 @@
+.value-container {
+    display: flex;
+    align-items: center;
+    flex-basis: auto;
+    margin-left: 2px;
+    font-size: 14px;
+    line-height: 18px;
+}
+
+.option {
+    display: flex;
+    align-items: center;
+    flex-basis: auto;
+    font-size: 14px;
+}
+
+.target-button {
+    display: flex;
+    gap: 0.8rem;
+    justify-content:space-between;
+    align-items: center;
+    font-size: 14px;
+    font-style: normal;
+    line-height: 18px;
+    border: 1px solid rgb(200 200 200);
+    border-radius: 3px;
+    padding: 0.3rem;
+    background-color: white;
+    text-align: left;
+    min-width: 120px;
+    padding: 4px 10px 4px 10px;
+    cursor: pointer;
+    z-index: "50";
+}
+
+.target-button:hover {
+    border-color: rgb(118 118 118);
+}

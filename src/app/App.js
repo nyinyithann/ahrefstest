@@ -4,9 +4,9 @@ import * as Curry from "rescript/lib/es6/curry.js";
 import * as React from "react";
 import * as NotFound from "../pages/not_found/NotFound.js";
 import * as Js_promise from "rescript/lib/es6/js_promise.js";
-import * as ErrorBoundary from "../components/error_boundary/ErrorBoundary.js";
+import * as ErrorBoundary from "../components/error-boundary/ErrorBoundary.js";
 import AppModuleCss from "./App.module.css";
-import * as SuspensionLoader from "../components/suspension_loader/SuspensionLoader.js";
+import * as SuspensionLoader from "../components/suspension-loader/SuspensionLoader.js";
 import * as RescriptReactRouter from "@rescript/react/src/RescriptReactRouter.js";
 
 var styles = AppModuleCss;

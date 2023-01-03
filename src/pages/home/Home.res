@@ -3,7 +3,6 @@
 @react.component
 let make = () => {
   <div className={styles["main"]}>
-    <p> {"Hello, World!"->React.string} </p>
-    <CountrySelect />
+    <CountrySelect className={styles["country-select"]} />
   </div>
 }
