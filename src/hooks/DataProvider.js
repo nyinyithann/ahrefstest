@@ -9,43 +9,6 @@ import * as ViewModel from "../model/ViewModel.js";
 import * as Caml_option from "rescript/lib/es6/caml_option.js";
 import * as Caml_js_exceptions from "rescript/lib/es6/caml_js_exceptions.js";
 
-var initialContextValue_countries = [];
-
-function initialContextValue_loadCountries(param) {
-  
-}
-
-var initialContextValue = {
-  loading: false,
-  error: "",
-  countries: initialContextValue_countries,
-  loadCountries: initialContextValue_loadCountries
-};
-
-var context = React.createContext(initialContextValue);
-
-var provider = context.Provider;
-
-function CountriesProvider$CountriesContext$Provider(Props) {
-  var value = Props.value;
-  var children = Props.children;
-  return React.createElement(provider, {
-              value: value,
-              children: children
-            });
-}
-
-var Provider = {
-  provider: provider,
-  make: CountriesProvider$CountriesContext$Provider
-};
-
-var CountriesContext = {
-  initialContextValue: initialContextValue,
-  context: context,
-  Provider: Provider
-};
-
 var initialState_countries = [];
 
 var initialState = {
@@ -76,7 +39,7 @@ function reducer(state, action) {
   }
 }
 
-function loadCountriesInternal(dispatch, signal) {
+function loadCountries(dispatch, signal) {
   var callback = function (result) {
     if (result.TAG !== /* Ok */0) {
       return Curry._1(dispatch, {
@@ -123,43 +86,28 @@ function loadCountriesInternal(dispatch, signal) {
   WebAPI.getCountries("https://api.github.com/gists/659db3f4566df459bd59c8a53dc9f71f", callback, Caml_option.some(signal), undefined);
 }
 
-function CountriesProvider(Props) {
-  var children = Props.children;
+function useCountriesData(param) {
   var match = React.useReducer(reducer, initialState);
   var dispatch = match[1];
   var state = match[0];
-  var loadCountries = React.useMemo((function () {
-          return function (param) {
-            return loadCountriesInternal(dispatch, param);
-          };
+  React.useEffect((function () {
+          var controller = new AbortController();
+          loadCountries(dispatch, controller.signal);
+          return (function (param) {
+                    controller.abort("Cancel the request");
+                  });
         }), [dispatch]);
-  var value_loading = state.loading;
-  var value_error = state.error;
-  var value_countries = state.countries;
-  var value = {
-    loading: value_loading,
-    error: value_error,
-    countries: value_countries,
-    loadCountries: loadCountries
-  };
-  return React.createElement(CountriesProvider$CountriesContext$Provider, {
-              value: value,
-              children: children
-            });
+  return [
+          state.loading,
+          state.error,
+          state.countries
+        ];
 }
-
-function useCountriesContext(param) {
-  return React.useContext(context);
-}
-
-var make = CountriesProvider;
 
 export {
-  CountriesContext ,
   initialState ,
   reducer ,
-  loadCountriesInternal ,
-  make ,
-  useCountriesContext ,
+  loadCountries ,
+  useCountriesData ,
 }
-/* context Not a pure module */
+/* Model Not a pure module */
