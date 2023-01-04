@@ -3,6 +3,8 @@
 @react.component
 let make = () => {
   <div className={styles["main"]}>
-    <CountrySelect className={styles["country-select"]} />
+    <CountriesProvider>
+      <CountrySelect className={styles["country-select"]} />
+    </CountriesProvider>
   </div>
 }

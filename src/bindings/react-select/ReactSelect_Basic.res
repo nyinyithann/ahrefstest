@@ -1,4 +1,4 @@
-type optionProps = {data: Model.country}
+type optionProps = {data: ViewModel.country}
 
 @deriving(abstract)
 type components = {
@@ -47,8 +47,8 @@ external make: (
   ~ignoreAccents: bool=?,
   ~tabSelectsValue: bool=?,
   ~className: string=?,
-  ~options: array<Model.country>=?,
-  ~value: Model.country=?,
+  ~options: array<ViewModel.country>=?,
+  ~value: ViewModel.country=?,
   ~placeholder: string=?,
   ~components: injectedComponents=?,
   ~styles: injectedStyles=?,

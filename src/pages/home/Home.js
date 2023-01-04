@@ -3,14 +3,17 @@
 import * as React from "react";
 import * as CountrySelect from "../../components/country-select/CountrySelect.js";
 import HomeModuleCss from "./Home.module.css";
+import * as CountriesProvider from "../../provider/CountriesProvider.js";
 
 var styles = HomeModuleCss;
 
 function Home(Props) {
   return React.createElement("div", {
               className: styles.main
-            }, React.createElement(CountrySelect.make, {
-                  className: styles["country-select"]
+            }, React.createElement(CountriesProvider.make, {
+                  children: React.createElement(CountrySelect.make, {
+                        className: styles["country-select"]
+                      })
                 }));
 }
 
