@@ -1,7 +1,7 @@
 type optionProps = {data: Model.country}
 
 @deriving(abstract)
-type selectComponents = {
+type components = {
   @as("DropdownIndicator")
   dropdownIndicatorComp: React.component<{.}>,
   @as("ValueContainer")
@@ -11,10 +11,10 @@ type selectComponents = {
 }
 
 @module("react-select")
-external components: selectComponents = "components"
+external components: components = "components"
 
 @deriving(abstract)
-type replacingComponents = {
+type injectedComponents = {
   @optional @as("DropdownIndicator")
   dropdownIndicator: Js.Nullable.t<React.componentLike<{.}, React.element>>,
   @optional @as("ValueContainer")
@@ -26,11 +26,13 @@ type replacingComponents = {
 type styler = ReactDOM.Style.t => ReactDOM.Style.t
 
 @deriving(abstract)
-type replacingStyles = {
+type injectedStyles = {
   @optional
   menu: styler,
   @optional
   control: styler,
+  @optional
+  option: styler,
 }
 
 @module("react-select") @react.component
@@ -48,7 +50,7 @@ external make: (
   ~options: array<Model.country>=?,
   ~value: Model.country=?,
   ~placeholder: string=?,
-  ~components: replacingComponents=?,
-  ~styles: replacingStyles=?,
+  ~components: injectedComponents=?,
+  ~styles: injectedStyles=?,
   ~onChange: Js.Nullable.t<'a> => unit,
 ) => React.element = "default"

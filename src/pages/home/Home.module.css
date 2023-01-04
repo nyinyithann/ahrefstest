@@ -1,13 +1,13 @@
 .main {
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-    height: 100vh;
-    padding: 4rem 0rem 0rem 4rem;
+  display: flex;
+  justify-content: center;
+  align-items: top;
+  padding-top: 4rem;
+  width: 100%;
+  height: 100vh;
 }
 
 .country-select {
-    width: 250px;
+  font-size: 14px;
+  width: 250px;
 }
-
-

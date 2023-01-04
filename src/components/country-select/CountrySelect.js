@@ -3,9 +3,9 @@
 import * as Curry from "rescript/lib/es6/curry.js";
 import * as Model from "./Model.js";
 import * as React from "react";
-import * as DownIcon from "./DownIcon.js";
+import * as DownIcon from "../icons/DownIcon.js";
 import * as Dropdown from "./Dropdown.js";
-import * as GlassIcon from "./GlassIcon.js";
+import * as GlassIcon from "../icons/GlassIcon.js";
 import * as Caml_option from "rescript/lib/es6/caml_option.js";
 import ReactSelect from "react-select";
 import * as ReactSelect$1 from "react-select";
@@ -23,19 +23,11 @@ function makeOption(props) {
   return React.createElement("div", {
               className: styles.option
             }, React.createElement(ReactSelect$1.components.Option, props, React.createElement("div", {
-                      style: {
-                        display: "flex"
-                      }
+                      className: styles.item
                     }, React.createElement("span", {
-                          className: "fi fi-" + props.data.value + "",
-                          style: {
-                            display: "block",
-                            marginRight: "0.5rem"
-                          }
+                          className: "fi fi-" + props.data.value + " " + styles.flag + ""
                         }), React.createElement("span", {
-                          style: {
-                            display: "block"
-                          }
+                          className: styles.label
                         }, props.data.label))));
 }
 
@@ -84,6 +76,11 @@ var selectStyles = {
                   borderBottomLeftRadius: "0",
                   borderBottomRightRadius: "0",
                   boxShadow: "none"
+                });
+    }),
+  option: (function (provided) {
+      return Object.assign({}, provided, {
+                  padding: "4px 4px 4px 8px"
                 });
     })
 };

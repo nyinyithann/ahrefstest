@@ -1,0 +1,22 @@
+.dropdown-container {
+    position: relative;
+}
+
+.dropdown-menu {
+  --shadow: hsla(218, 50%, 10%, 0.1);
+  background-color: white;
+  border-radius: 2px;
+  box-shadow: 0 0 0 1px var(--shadow), 0 4px 12px var(--shadow);
+  margin-top: 4px;
+  position: absolute;
+  z-index: 2;
+}
+
+.overlay-blanket {
+    bottom: 0;
+    left: 0;
+    top: 0;
+    right: 0;
+    position: fixed;
+    z-index: 1;
+}

@@ -19,12 +19,9 @@ module Components = {
         ReactSelect.Select.components->ReactSelect.Select.optionCompGet,
         props,
         [
-          <div style={ReactDOM.Style.make(~display="flex", ())}>
-            <span
-              className={`fi fi-${props.data.value}`}
-              style={ReactDOM.Style.make(~marginRight="0.5rem", ~display="block", ())}
-            />
-            <span style={ReactDOM.Style.make(~display="block", ())}>
+          <div className={styles["item"]}>
+            <span className={`fi fi-${props.data.value} ${styles["flag"]}`} />
+            <span className={styles["label"]}>
               {props.data.label->React.string}
             </span>
           </div>,
@@ -33,7 +30,7 @@ module Components = {
     </div>
   }
 
-  let getComponents = Select.replacingComponents(
+  let getComponents = Select.injectedComponents(
     ~dropdownIndicator=Js.Nullable.null,
     ~valueContainer={makeValueContainer},
     ~option={makeOption},
@@ -54,7 +51,7 @@ module TargetButton = {
   }
 }
 
-let selectStyles = ReactSelect.Select.replacingStyles(
+let selectStyles = ReactSelect.Select.injectedStyles(
   ~menu=provided =>
     ReactDOM.Style.combine(
       provided,
@@ -74,6 +71,8 @@ let selectStyles = ReactSelect.Select.replacingStyles(
         (),
       ),
     ),
+  ~option=provided =>
+    ReactDOM.Style.combine(provided, ReactDOM.Style.make(~padding="4px 4px 4px 8px", ())),
   (),
 )
 
