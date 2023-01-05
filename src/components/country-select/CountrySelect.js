@@ -5,10 +5,13 @@ import * as React from "react";
 import * as DownIcon from "../icons/DownIcon.js";
 import * as Dropdown from "./Dropdown.js";
 import * as GlassIcon from "../icons/GlassIcon.js";
+import * as Caml_array from "rescript/lib/es6/caml_array.js";
 import * as Caml_option from "rescript/lib/es6/caml_option.js";
 import * as DataProvider from "../../hooks/DataProvider.js";
-import ReactSelect from "react-select";
-import * as ReactSelect$1 from "react-select";
+import * as ReactSelect from "react-select";
+import ReactSelect$1 from "react-select";
+import * as ReactTinyVirtualList from "../../bindings/react-tiny-virtual-list/ReactTinyVirtualList.js";
+import ReactTinyVirtualList$1 from "react-tiny-virtual-list";
 import CountrySelectModuleCss from "./CountrySelect.module.css";
 
 var styles = CountrySelectModuleCss;
@@ -16,13 +19,13 @@ var styles = CountrySelectModuleCss;
 function makeValueContainer(props) {
   return React.createElement("div", {
               className: styles["value-container"]
-            }, React.createElement(GlassIcon.make, {}), React.createElement(ReactSelect$1.components.ValueContainer, props));
+            }, React.createElement(GlassIcon.make, {}), React.createElement(ReactSelect.components.ValueContainer, props));
 }
 
 function makeOption(props) {
   return React.createElement("div", {
               className: styles.option
-            }, React.createElement(ReactSelect$1.components.Option, props, React.createElement("div", {
+            }, React.createElement(ReactSelect.components.Option, props, React.createElement("div", {
                       className: styles.item
                     }, React.createElement("span", {
                           className: "fi fi-" + props.data.value + " " + styles.flag + ""
@@ -31,15 +34,37 @@ function makeOption(props) {
                         }, props.data.label))));
 }
 
+function makeMenuList(props) {
+  var rows = props.children;
+  console.log(props);
+  return React.createElement("div", {
+              className: styles.option
+            }, React.createElement(ReactTinyVirtualList$1, {
+                  width: ReactTinyVirtualList.NumberOrString.$$int(400),
+                  height: ReactTinyVirtualList.NumberOrString.string("10rem"),
+                  itemCount: rows.length,
+                  itemSize: 20,
+                  renderItem: (function (param) {
+                      var index = param.index;
+                      return React.createElement("div", {
+                                  key: String(index),
+                                  style: param.style
+                                }, Caml_array.get(rows, index));
+                    })
+                }));
+}
+
 var getComponents = {
   DropdownIndicator: null,
   ValueContainer: makeValueContainer,
-  Option: makeOption
+  Option: makeOption,
+  MenuList: makeMenuList
 };
 
 var Components = {
   makeValueContainer: makeValueContainer,
   makeOption: makeOption,
+  makeMenuList: makeMenuList,
   getComponents: getComponents
 };
 
@@ -143,7 +168,7 @@ function CountrySelect(Props) {
   return React.createElement(Dropdown.make, {
               isOpen: match[0],
               target: React.createElement(CountrySelect$TargetButton, tmp),
-              children: React.createElement(ReactSelect, tmp$1),
+              children: React.createElement(ReactSelect$1, tmp$1),
               onClose: (function (param) {
                   Curry._1(setIsOpen, (function (param) {
                           return false;

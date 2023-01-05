@@ -1,4 +1,5 @@
 type optionProps = {data: ViewModel.country}
+type menuListProps = {children: array<React.element>}
 
 @deriving(abstract)
 type components = {
@@ -8,6 +9,8 @@ type components = {
   valueContainerComp: React.component<{.}>,
   @as("Option")
   optionComp: React.component<optionProps>,
+  @as("MenuList")
+  menuListComp: React.component<menuListProps>,
 }
 
 @module("react-select")
@@ -21,6 +24,8 @@ type injectedComponents = {
   valueContainer: React.componentLike<{.}, React.element>,
   @optional @as("Option")
   option: React.componentLike<optionProps, React.element>,
+  @optional @as("MenuList")
+  menuList: React.componentLike<menuListProps, React.element>,
 }
 
 type styler = ReactDOM.Style.t => ReactDOM.Style.t

@@ -28,9 +28,29 @@ module Components = {
     </div>
   }
 
+  let makeMenuList = (props : ReactSelect.Select.menuListProps) => {
+    open ReactTinyVirtualList
+    let rows = props.children
+    Js.log(props)
+    <div className={styles["option"]}>
+      <ReactTinyVirtualList
+        width={NumberOrString.int(400)}
+        height={NumberOrString.string("10rem")}
+        itemCount={rows->Array.length}
+        itemSize={20}
+        renderItem={({index, style}) => {
+          <div key={string_of_int(index)} style>
+           {rows[index]} 
+          </div>
+        }}
+      />
+    </div>
+  }
+
   let getComponents = Select.injectedComponents(
     ~dropdownIndicator=Js.Nullable.null,
     ~valueContainer={makeValueContainer},
+    ~menuList={makeMenuList},
     ~option={makeOption},
     (),
   )
@@ -78,7 +98,7 @@ let selectStyles = ReactSelect.Select.injectedStyles(
 let make = (~className: option<string>=?) => {
   let (isOpen, setIsOpen) = React.useState(() => false)
   let (value, setValue) = React.useState(() => None)
-  let (loading, error, countries) = DataProvider.useCountriesData() 
+  let (loading, error, countries) = DataProvider.useCountriesData()
 
   <Dropdown
     isOpen
