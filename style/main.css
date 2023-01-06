@@ -1,7 +1,7 @@
 :root {
   font-size: calc(1vw + 0.5em);
   box-sizing: border-box;
-  font-family: ArialMT, Helvetica, sans-serif;
+  font-family: arial, helvetica, sans-serif;
 }
 
 *,

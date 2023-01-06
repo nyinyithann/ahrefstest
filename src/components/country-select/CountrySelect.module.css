@@ -26,9 +26,26 @@
   margin-right: 0.5rem;
   width: 14px;
   height: 10px;
+  flex: 0 0 auto;
 }
 
 .option .label {
+  display: block;
+}
+
+.no-options-message {
+  display: flex;
+  align-items: center;
+  flex-basis: auto;
+  font-size: 14px;
+}
+
+.no-options-message .item {
+  display: flex;
+  align-items: flex-start;
+}
+
+.no-options-message .label {
   display: block;
 }
 

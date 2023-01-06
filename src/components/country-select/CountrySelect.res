@@ -28,10 +28,26 @@ module Components = {
     </div>
   }
 
+  let makeNoOptionsMessage = props => {
+    <div className={styles["no-options-message"]}>
+      {React.createElementVariadic(
+        ReactSelect.Select.components->ReactSelect.Select.noOptionsMessageComGet,
+        props,
+        [
+          <div className={styles["item"]}>
+            <span className={styles["label"]}> {"No items found"->React.string} </span>
+          </div>,
+        ],
+      )}
+    </div>
+  }
+
   let getComponents = Select.injectedComponents(
     ~dropdownIndicator=Js.Nullable.null,
     ~valueContainer={makeValueContainer},
     ~option={makeOption},
+    ~noOptionsMessage={makeNoOptionsMessage},
+    ~menuList={MenuList.makeMenuList},
     (),
   )
 }
@@ -78,7 +94,7 @@ let selectStyles = ReactSelect.Select.injectedStyles(
 let make = (~className: option<string>=?) => {
   let (isOpen, setIsOpen) = React.useState(() => false)
   let (value, setValue) = React.useState(() => None)
-  let (loading, error, countries) = DataProvider.useCountriesData() 
+  let (loading, error, countries) = DataProvider.useCountriesData()
 
   <Dropdown
     isOpen
@@ -95,6 +111,7 @@ let make = (~className: option<string>=?) => {
       controlShouldRenderValue={false}
       hideSelectedOptions={false}
       isClearable={false}
+      isLoading={loading}
       options={countries}
       placeholder={"Search"}
       components={Components.getComponents}
