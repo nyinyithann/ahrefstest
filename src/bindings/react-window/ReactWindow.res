@@ -10,6 +10,9 @@ module List = {
     ~itemCount: int,
     ~itemSize: int => int,
     ~ref: ReactDOM.domRef,
+    ~outerRef: ReactDOM.domRef=?,
+    ~overScanCount: int=?,
+    ~itemData: array<React.element>,
     ~children: childRenderProps => React.element,
   ) => React.element = "VariableSizeList"
 }

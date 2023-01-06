@@ -1,6 +1,11 @@
 type props<'a> = {data: 'a}
 
-type menuListProps = {children: React.element}
+type menuListProps = {
+  children: React.element,
+  maxHeight: int,
+  hasValue: bool,
+  innerRef: ReactDOM.Ref.t,
+}
 
 @deriving(abstract)
 type components = {
@@ -19,8 +24,13 @@ type components = {
 @module("react-select")
 external components: components = "components"
 
+type filterOption
+type filterConfig = { ignoreAccents : bool}
+@module("react-select") @val
+external createFilter: filterConfig => filterOption = "createFilter" 
+
 @deriving(abstract)
-type injectedComponents = {
+type customComponents = {
   @optional @as("DropdownIndicator")
   dropdownIndicator: Js.Nullable.t<React.componentLike<{.}, React.element>>,
   @optional @as("ValueContainer")
@@ -57,11 +67,13 @@ external make: (
   ~ignoreAccents: bool=?,
   ~tabSelectsValue: bool=?,
   ~className: string=?,
+  ~captureMenuScroll: bool=?,
+  ~filterOption: filterOption=?,
   ~isLoading: bool=?,
   ~options: array<ViewModel.country>=?,
   ~value: ViewModel.country=?,
   ~placeholder: string=?,
-  ~components: injectedComponents=?,
+  ~components: customComponents=?,
   ~styles: injectedStyles=?,
   ~onChange: Js.Nullable.t<'a> => unit,
 ) => React.element = "default"

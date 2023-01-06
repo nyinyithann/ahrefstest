@@ -3,4 +3,6 @@
   align-items: center;
   flex-basis: auto;
   font-size: 14px;
+  scroll-behavior: smooth;
+  scroll-padding-top: 0;
 }

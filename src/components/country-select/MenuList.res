@@ -5,9 +5,20 @@ module IntCmp = Belt.Id.MakeComparable({
   let cmp = (a, b) => Int32.compare(a, b)
 })
 
-type props = {isFocused: bool}
+type innerProps = {mutable onMouseOver: Js.Nullable.t<ReactEvent.Mouse.t>}
+
+type props = {
+  isFocused: bool,
+  innerProps: innerProps,
+
+  /* just to verify the element is Option Element or NoOptionMessage element */
+  data? : ViewModel.country 
+}
+
 @get external getProps: React.element => props = "props"
-@send external scrollToItem: (Dom.element, int) => unit = "scrollToItem"
+@send
+external scrollToItem: (Dom.element, int, [#auto | #smart | #center | #start | #end]) => unit =
+  "scrollToItem"
 @send external resetAfterIndex: (Dom.element, int) => unit = "resetAfterIndex"
 
 module MenuItem = {
@@ -36,22 +47,34 @@ let getCurrentIndex = (rows: array<React.element>) => {
   rows->Belt.Array.getIndexBy(x => getProps(x).isFocused)->Belt.Option.getWithDefault(0)
 }
 
-let makeMenuList = (props: ReactSelect.Select.menuListProps) => {
-  let rows = React.useMemo1(() => React.Children.toArray(props.children), [props.children])
+let defaultRowItemHeight = 25
 
-  /* Js.log("props") */
-  /* Js.log(props) */
-  /* Js.log("props.children") */
-  /* Js.log(props.children) */
-  /* let child = rows[0] */
-  /* Js.log(getProps(child)) */
-  /* Js.log(getCurrentIndex(rows)) */
+let makeMenuList = (props: ReactSelect.Select.menuListProps) => {
+  let rows = React.useMemo1(() => {
+    React.Children.toArray(props.children)->Belt.Array.map(x => {
+      let p = getProps(x)
+      switch p.data {
+          |Some(_) => p.innerProps.onMouseOver = Js.Nullable.null
+          | _ => ()
+      }  
+      x
+    })
+  }, [props.children])
 
   let currentIndex = React.useMemo1(() => getCurrentIndex(rows), [rows])
 
   let (measuredHeights, setMeasuredHeights) = React.useState(_ => Belt.Map.make(~id=module(IntCmp)))
 
   let list = React.useRef(Js.Nullable.null)
+
+  let menuHeight = React.useMemo2(() => {
+    rows->Belt.Array.reduceWithIndexU(0, (. a, _, i) => {
+      switch Belt.Map.get(measuredHeights, i) {
+      | Some(mh) => a + mh
+      | None => a + defaultRowItemHeight
+      }
+    })
+  }, (rows, measuredHeights))
 
   let setMeasuredHeight = (index, measuredHeight) => {
     if measuredHeights->Belt.Map.getWithDefault(index, -1) != measuredHeight {
@@ -71,20 +94,23 @@ let makeMenuList = (props: ReactSelect.Select.menuListProps) => {
   React.useEffect3(() => {
     switch Js.Nullable.toOption(list.current) {
     | Some(l) =>
-      if currentIndex > 0 {
-        scrollToItem(l, currentIndex)
+      if currentIndex >= 0 {
+        Util.debounce(() => scrollToItem(l, currentIndex, #smart), 50)()
       }
     | None => ()
     }
-    None
+     None
   }, (currentIndex, rows, list))
 
   <div className={styles["main"]}>
     <ReactWindow.List
       width={Util.NumberOrString.int(300)}
-      height={Util.NumberOrString.int(200)}
+      height={Util.NumberOrString.int(Js.Math.min_int(menuHeight, 200))}
       itemCount={rows->Array.length}
-      itemSize={index => measuredHeights->Belt.Map.get(index)->Belt.Option.getWithDefault(25)}
+      itemSize={index =>
+        measuredHeights->Belt.Map.get(index)->Belt.Option.getWithDefault(defaultRowItemHeight)}
+      itemData={rows}
+      overScanCount={0}
       ref={ReactDOM.Ref.domRef(list)}>
       {({index, style}) => {
         <div key={string_of_int(index)} style>

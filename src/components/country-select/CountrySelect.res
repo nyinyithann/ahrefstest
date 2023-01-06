@@ -42,7 +42,7 @@ module Components = {
     </div>
   }
 
-  let getComponents = Select.injectedComponents(
+  let getComponents = Select.customComponents(
     ~dropdownIndicator=Js.Nullable.null,
     ~valueContainer={makeValueContainer},
     ~option={makeOption},
@@ -94,38 +94,42 @@ let selectStyles = ReactSelect.Select.injectedStyles(
 let make = (~className: option<string>=?) => {
   let (isOpen, setIsOpen) = React.useState(() => false)
   let (value, setValue) = React.useState(() => None)
-  let (loading, error, countries) = DataProvider.useCountriesData()
+  let (loading, _, countries) = DataProvider.useCountriesData()
+  <>
+    /* { */
+    /* true ? <span>{"loading"->React.string}</span> : React.null */
+    /* } */
+    <Dropdown
+      isOpen
+      onClose={() => setIsOpen(_ => false)}
+      target={<TargetButton ?value toggleOpen={() => setIsOpen(prev => !prev)} />}>
+      <Select
+        ?className
+        ?value
+        multi={false}
+        autoFocus={true}
+        menuIsOpen={true}
+        ignoreAccents={false}
+        backspaceRemovesValue={false}
+        controlShouldRenderValue={false}
+        hideSelectedOptions={false}
+        isClearable={false}
+        filterOption={ReactSelect.Select.createFilter({ReactSelect.Select.ignoreAccents: true})}
+        options={countries}
+        placeholder={"Search"}
+        components={Components.getComponents}
+        styles={selectStyles}
+        onChange={country =>
+          switch Js.Nullable.toOption(country) {
+          | Some(c) => {
+              setValue(_ => Some(c))
+              setIsOpen(_ => false)
+              Js.log(c)
+            }
 
-  <Dropdown
-    isOpen
-    onClose={() => setIsOpen(_ => false)}
-    target={<TargetButton ?value toggleOpen={() => setIsOpen(prev => !prev)} />}>
-    <Select
-      ?className
-      ?value
-      multi={false}
-      autoFocus={true}
-      menuIsOpen={true}
-      ignoreAccents={false}
-      backspaceRemovesValue={false}
-      controlShouldRenderValue={false}
-      hideSelectedOptions={false}
-      isClearable={false}
-      isLoading={loading}
-      options={countries}
-      placeholder={"Search"}
-      components={Components.getComponents}
-      styles={selectStyles}
-      onChange={country =>
-        switch Js.Nullable.toOption(country) {
-        | Some(c) => {
-            setValue(_ => Some(c))
-            setIsOpen(_ => false)
-            Js.log(c)
-          }
-
-        | _ => ()
-        }}
-    />
-  </Dropdown>
+          | _ => ()
+          }}
+      />
+    </Dropdown>
+  </>
 }
