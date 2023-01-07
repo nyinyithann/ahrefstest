@@ -10,7 +10,11 @@ function Home(Props) {
   return React.createElement("div", {
               className: styles.main
             }, React.createElement(CountrySelect.make, {
-                  className: styles["country-select"]
+                  country: "zw",
+                  className: styles["country-select"],
+                  onChange: (function (country) {
+                      console.log(country);
+                    })
                 }));
 }
 

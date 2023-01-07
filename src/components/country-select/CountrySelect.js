@@ -6,6 +6,7 @@ import * as DownIcon from "../icons/DownIcon.js";
 import * as Dropdown from "./Dropdown.js";
 import * as MenuList from "./MenuList.js";
 import * as GlassIcon from "../icons/GlassIcon.js";
+import * as Belt_Array from "rescript/lib/es6/belt_Array.js";
 import * as Caml_option from "rescript/lib/es6/caml_option.js";
 import * as DataProvider from "../../hooks/DataProvider.js";
 import ReactSelect from "react-select";
@@ -126,7 +127,9 @@ var selectStyles = {
 };
 
 function CountrySelect(Props) {
+  var country = Props.country;
   var className = Props.className;
+  var onChange = Props.onChange;
   var match = React.useState(function () {
         return false;
       });
@@ -137,6 +140,15 @@ function CountrySelect(Props) {
   var setValue = match$1[1];
   var value = match$1[0];
   var match$2 = DataProvider.useCountriesData(undefined);
+  var countries = match$2[2];
+  React.useEffect((function () {
+          var value = country !== undefined ? Belt_Array.getByU(countries, (function (c) {
+                    return c.value.toLowerCase() === country.toLowerCase();
+                  })) : undefined;
+          Curry._1(setValue, (function (param) {
+                  return value;
+                }));
+        }), [countries]);
   var tmp = {
     toggleOpen: (function (param) {
         Curry._1(setIsOpen, (function (prev) {
@@ -160,7 +172,7 @@ function CountrySelect(Props) {
     filterOption: ReactSelect$1.createFilter({
           ignoreAccents: true
         }),
-    options: match$2[2],
+    options: countries,
     placeholder: "Search",
     components: getComponents,
     styles: selectStyles,
@@ -172,8 +184,11 @@ function CountrySelect(Props) {
           Curry._1(setIsOpen, (function (param) {
                   return false;
                 }));
-          console.log(country);
-          return ;
+          if (onChange !== undefined) {
+            return Curry._1(onChange, country);
+          } else {
+            return ;
+          }
         }
         
       })

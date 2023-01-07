@@ -103,10 +103,25 @@ let selectStyles = ReactSelect.Select.injectedStyles(
 )
 
 @react.component
-let make = (~className: option<string>=?) => {
+let make = (
+  ~country: option<string>=?,
+  ~className: option<string>=?,
+  ~onChange: option<ViewModel.country => unit>=?,
+) => {
   let (isOpen, setIsOpen) = React.useState(() => false)
   let (value, setValue) = React.useState(() => None)
-  let (loading, _, countries) = DataProvider.useCountriesData()
+  let (_, _, countries) = DataProvider.useCountriesData()
+
+  React.useEffect1(() => {
+    open Js.String2
+    let value = switch country {
+    | Some(v) => countries->Belt.Array.getByU((. c) => toLowerCase(c.value) == toLowerCase(v))
+    | None => None
+    }
+    setValue(_ => value)
+    None
+  }, [countries])
+
   <>
     /* { */
     /* true ? <span>{"loading"->React.string}</span> : React.null */
@@ -137,7 +152,10 @@ let make = (~className: option<string>=?) => {
           | Some(c) => {
               setValue(_ => Some(c))
               setIsOpen(_ => false)
-              Js.log(c)
+              switch onChange {
+              | Some(change) => change(c)
+              | None => ()
+              }
             }
 
           | _ => ()

@@ -7,9 +7,19 @@ let make = (
   ~children: React.element,
   ~onClose: unit => unit,
 ) => {
-  <div className={styles["dropdown-container"]}>
+  let handleKeyDown = e => {
+    if ReactEvent.Keyboard.key(e) == "Escape" {
+      onClose()
+    }
+  }
+
+  <div className={styles["dropdown-container"]} onKeyDown={handleKeyDown}>
     {target}
     {isOpen ? <div className={styles["dropdown-menu"]}> children </div> : React.null}
-    {isOpen ? <div className={styles["overlay-blanket"]} onClick={_ => onClose()} /> : React.null}
+    {isOpen
+      ? <div
+          className={styles["overlay-blanket"]} onClick={_ => onClose()} 
+        />
+      : React.null}
   </div>
 }

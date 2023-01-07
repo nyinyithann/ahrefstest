@@ -77,4 +77,5 @@ external make: (
   ~components: customComponents=?,
   ~styles: injectedStyles=?,
   ~onChange: Js.Nullable.t<'a> => unit,
+  ~onKeyDown: ReactEvent.Keyboard.t => unit=?,
 ) => React.element = "default"

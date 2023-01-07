@@ -106,9 +106,9 @@ function makeMenuList(props) {
   React.useEffect((function () {
           var l = list.current;
           if (!(l == null) && currentIndex >= 0) {
-            Util.throttle((function (param) {
+            Util.debounce((function (param) {
                       l.scrollToItem(currentIndex, "smart");
-                    }), 2500)(undefined);
+                    }), 90)(undefined);
           }
           
         }), [
@@ -116,13 +116,9 @@ function makeMenuList(props) {
         rows,
         list
       ]);
-  var handleKeyDown = function (e) {
-    console.log(e.key);
-  };
   return React.createElement("div", {
               className: styles.main,
-              id: "react-window-menu-list",
-              onKeyDown: handleKeyDown
+              id: "react-window-menu-list"
             }, React.createElement(ReactWindow.VariableSizeList, {
                   className: styles.scrollbar,
                   width: Util.NumberOrString.$$int(300),

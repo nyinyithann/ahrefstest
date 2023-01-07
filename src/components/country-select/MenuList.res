@@ -94,19 +94,14 @@ let makeMenuList = (props: ReactSelect.Select.menuListProps) => {
     switch Js.Nullable.toOption(list.current) {
     | Some(l) =>
       if currentIndex >= 0 {
-         Util.throttle(() => scrollToItem(l, currentIndex, #smart), 2500)()
-         /* scrollToItem(l, currentIndex, #smart) */
+         Util.debounce(() => scrollToItem(l, currentIndex, #smart), 90)()
       }
     | None => ()
     }
     None
   }, (currentIndex, rows, list))
 
-  let handleKeyDown = e => {
-      Js.log(ReactEvent.Keyboard.key(e))
-  }
-
-  <div id="react-window-menu-list" className={styles["main"]} onKeyDown={handleKeyDown}>
+  <div id="react-window-menu-list" className={styles["main"]} >
     <ReactWindow.List
       className={styles["scrollbar"]}
       width={Util.NumberOrString.int(300)}
