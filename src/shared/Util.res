@@ -16,3 +16,16 @@ let debounce = (fn, delay) => {
         }, delay))
   }
 }
+
+let throttle = (fn, delay) => {
+    let tick = ref(false)
+    () => {
+        if !(tick.contents) {
+            fn()
+            tick := true
+            Js.Global.setTimeout(() => {
+                 tick := false
+            }, delay) -> ignore
+        }
+    }
+}

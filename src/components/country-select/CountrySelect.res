@@ -2,8 +2,20 @@
 
 open ReactSelect
 
-module Components = {
-  let makeValueContainer = props => {
+module FlagItem = {
+  @react.component
+  let make = (~data: ViewModel.country) => {
+    <div className={styles["item"]}>
+      <span className={`fi fi-${data.value} ${styles["flag"]}`} />
+      <span className={styles["label"]}> {data.label->React.string} </span>
+    </div>
+  }
+  let make = React.memo(make)
+}
+
+module ValueItem = {
+  @react.component
+  let make = (~props) => {
     <div className={styles["value-container"]}>
       <GlassIcon />
       {React.createElement(
@@ -12,18 +24,18 @@ module Components = {
       )}
     </div>
   }
+  let make = React.memo(make)
+}
+
+module Components = {
+  let makeValueContainer = props => <ValueItem props />
 
   let makeOption = props => {
     <div className={styles["option"]}>
       {React.createElementVariadic(
         ReactSelect.Select.components->ReactSelect.Select.optionCompGet,
         props,
-        [
-          <div className={styles["item"]}>
-            <span className={`fi fi-${props.data.value} ${styles["flag"]}`} />
-            <span className={styles["label"]}> {props.data.label->React.string} </span>
-          </div>,
-        ],
+        [<FlagItem data={props.data} />],
       )}
     </div>
   }
@@ -106,6 +118,7 @@ let make = (~className: option<string>=?) => {
       <Select
         ?className
         ?value
+        classNamePrefix="country-select"
         multi={false}
         autoFocus={true}
         menuIsOpen={true}
@@ -114,9 +127,9 @@ let make = (~className: option<string>=?) => {
         controlShouldRenderValue={false}
         hideSelectedOptions={false}
         isClearable={false}
-        filterOption={ReactSelect.Select.createFilter({ReactSelect.Select.ignoreAccents: true})}
         options={countries}
         placeholder={"Search"}
+        filterOption={ReactSelect.Select.createFilter({ReactSelect.Select.ignoreAccents: true})}
         components={Components.getComponents}
         styles={selectStyles}
         onChange={country =>

@@ -14,22 +14,48 @@ import CountrySelectModuleCss from "./CountrySelect.module.css";
 
 var styles = CountrySelectModuleCss;
 
-function makeValueContainer(props) {
+function CountrySelect$FlagItem(Props) {
+  var data = Props.data;
+  return React.createElement("div", {
+              className: styles.item
+            }, React.createElement("span", {
+                  className: "fi fi-" + data.value + " " + styles.flag + ""
+                }), React.createElement("span", {
+                  className: styles.label
+                }, data.label));
+}
+
+var make = React.memo(CountrySelect$FlagItem);
+
+var FlagItem = {
+  make: make
+};
+
+function CountrySelect$ValueItem(Props) {
+  var props = Props.props;
   return React.createElement("div", {
               className: styles["value-container"]
             }, React.createElement(GlassIcon.make, {}), React.createElement(ReactSelect$1.components.ValueContainer, props));
 }
 
+var make$1 = React.memo(CountrySelect$ValueItem);
+
+var ValueItem = {
+  make: make$1
+};
+
+function makeValueContainer(props) {
+  return React.createElement(make$1, {
+              props: props
+            });
+}
+
 function makeOption(props) {
   return React.createElement("div", {
               className: styles.option
-            }, React.createElement(ReactSelect$1.components.Option, props, React.createElement("div", {
-                      className: styles.item
-                    }, React.createElement("span", {
-                          className: "fi fi-" + props.data.value + " " + styles.flag + ""
-                        }), React.createElement("span", {
-                          className: styles.label
-                        }, props.data.label))));
+            }, React.createElement(ReactSelect$1.components.Option, props, React.createElement(make, {
+                      data: props.data
+                    })));
 }
 
 function makeNoOptionsMessage(props) {
@@ -122,6 +148,7 @@ function CountrySelect(Props) {
     tmp.value = Caml_option.valFromOption(value);
   }
   var tmp$1 = {
+    classNamePrefix: "country-select",
     multi: false,
     autoFocus: true,
     backspaceRemovesValue: false,
@@ -169,13 +196,15 @@ function CountrySelect(Props) {
                 }));
 }
 
-var make = CountrySelect;
+var make$2 = CountrySelect;
 
 export {
   styles ,
+  FlagItem ,
+  ValueItem ,
   Components ,
   TargetButton ,
   selectStyles ,
-  make ,
+  make$2 as make,
 }
 /* styles Not a pure module */

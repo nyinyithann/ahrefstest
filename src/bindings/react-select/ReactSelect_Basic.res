@@ -25,9 +25,9 @@ type components = {
 external components: components = "components"
 
 type filterOption
-type filterConfig = { ignoreAccents : bool}
+type filterConfig = {ignoreAccents: bool}
 @module("react-select") @val
-external createFilter: filterConfig => filterOption = "createFilter" 
+external createFilter: filterConfig => filterOption = "createFilter"
 
 @deriving(abstract)
 type customComponents = {
@@ -57,6 +57,7 @@ type injectedStyles = {
 
 @module("react-select") @react.component
 external make: (
+  ~classNamePrefix: string=?,
   ~multi: bool,
   ~autoFocus: bool=?,
   ~backspaceRemovesValue: bool=?,

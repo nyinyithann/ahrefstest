@@ -9,6 +9,7 @@ import * as Belt_Map from "rescript/lib/es6/belt_Map.js";
 import * as Belt_Array from "rescript/lib/es6/belt_Array.js";
 import * as Caml_array from "rescript/lib/es6/caml_array.js";
 import * as Belt_Option from "rescript/lib/es6/belt_Option.js";
+import * as Caml_option from "rescript/lib/es6/caml_option.js";
 import * as ReactWindow from "react-window";
 import MenuListModuleCss from "./MenuList.module.css";
 
@@ -29,13 +30,10 @@ function MenuList$MenuItem(Props) {
           var c = ref.current;
           if (!(c == null)) {
             var h = c.getBoundingClientRect().height;
-            if (!Number.isNaN(h)) {
-              Curry._2(setMeasuredHeight, index, h | 0);
-            }
-            
+            Curry._1(setMeasuredHeight(index), h | 0);
           }
           
-        }), [ref.current]);
+        }), [ref]);
   return React.createElement("div", {
               ref: ref
             }, child);
@@ -46,14 +44,14 @@ var MenuItem = {
 };
 
 function getCurrentIndex(rows) {
-  return Belt_Option.getWithDefault(Belt_Array.getIndexBy(rows, (function (x) {
+  return Belt_Option.getWithDefault(Belt_Array.getIndexByU(rows, (function (x) {
                     return x.props.isFocused;
                   })), 0);
 }
 
 function makeMenuList(props) {
   var rows = React.useMemo((function () {
-          return Belt_Array.map(React.Children.toArray(props.children), (function (x) {
+          return Belt_Array.mapU(React.Children.toArray(props.children), (function (x) {
                         var p = x.props;
                         var match = p.data;
                         if (match !== undefined) {
@@ -84,31 +82,33 @@ function makeMenuList(props) {
         rows,
         measuredHeights
       ]);
-  var setMeasuredHeight = function (index, measuredHeight) {
-    if (Belt_Map.getWithDefault(measuredHeights, index, -1) === measuredHeight) {
-      return ;
-    }
-    Curry._1(setMeasuredHeights, (function (prev) {
-            return Belt_Map.set(prev, index, measuredHeight);
-          }));
-    var l = list.current;
-    if (!(l == null)) {
-      l.resetAfterIndex(index);
-      return ;
-    }
-    
-  };
+  var setMeasuredHeight = React.useCallback((function (index) {
+          return function (measuredHeight) {
+            if (Belt_Map.getWithDefault(measuredHeights, index, -1) === measuredHeight) {
+              return ;
+            }
+            setMeasuredHeights(function (prev) {
+                  return Belt_Map.set(prev, index, measuredHeight);
+                });
+            var l = list.current;
+            if (!(l == null)) {
+              l.resetAfterIndex(index);
+              return ;
+            }
+            
+          };
+        }), [measuredHeights]);
   React.useEffect((function () {
-          Curry._1(setMeasuredHeights, (function (param) {
-                  return Belt_Map.make(IntCmp);
-                }));
+          setMeasuredHeights(function (param) {
+                return Belt_Map.make(IntCmp);
+              });
         }), [rows]);
   React.useEffect((function () {
           var l = list.current;
           if (!(l == null) && currentIndex >= 0) {
-            Util.debounce((function (param) {
+            Util.throttle((function (param) {
                       l.scrollToItem(currentIndex, "smart");
-                    }), 50)(undefined);
+                    }), 2500)(undefined);
           }
           
         }), [
@@ -116,17 +116,38 @@ function makeMenuList(props) {
         rows,
         list
       ]);
+  var handleKeyDown = function (e) {
+    console.log(e.key);
+  };
   return React.createElement("div", {
-              className: styles.main
+              className: styles.main,
+              id: "react-window-menu-list",
+              onKeyDown: handleKeyDown
             }, React.createElement(ReactWindow.VariableSizeList, {
+                  className: styles.scrollbar,
                   width: Util.NumberOrString.$$int(300),
                   height: Util.NumberOrString.$$int(Math.min(menuHeight, 200)),
                   itemCount: rows.length,
                   itemSize: (function (index) {
                       return Belt_Option.getWithDefault(Belt_Map.get(measuredHeights, index), 25);
                     }),
+                  innerElementType: React.forwardRef(function (props, ref) {
+                        var tmp = {
+                          id: "reactwindow-list-inner-element",
+                          style: props.style
+                        };
+                        var tmp$1 = Belt_Option.map((ref == null) ? undefined : Caml_option.some(ref), (function (prim) {
+                                return prim;
+                              }));
+                        if (tmp$1 !== undefined) {
+                          tmp.ref = Caml_option.valFromOption(tmp$1);
+                        }
+                        return React.createElement("div", tmp, props.children);
+                      }),
+                  initialScrollOffset: 0,
+                  estimatedItemSize: 25,
                   ref: list,
-                  overScanCount: 0,
+                  overscanCount: 0,
                   itemData: rows,
                   children: (function (param) {
                       var index = param.index;
@@ -136,7 +157,7 @@ function makeMenuList(props) {
                                 }, React.createElement(MenuList$MenuItem, {
                                       index: index,
                                       setMeasuredHeight: setMeasuredHeight,
-                                      child: Caml_array.get(rows, index)
+                                      child: Caml_array.get(param.data, index)
                                     }));
                     })
                 }));

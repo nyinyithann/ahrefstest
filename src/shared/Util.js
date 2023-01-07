@@ -31,8 +31,26 @@ function debounce(fn, delay) {
   };
 }
 
+function throttle(fn, delay) {
+  var tick = {
+    contents: false
+  };
+  return function (param) {
+    if (!tick.contents) {
+      Curry._1(fn, undefined);
+      tick.contents = true;
+      setTimeout((function (param) {
+              tick.contents = false;
+            }), delay);
+      return ;
+    }
+    
+  };
+}
+
 export {
   NumberOrString ,
   debounce ,
+  throttle ,
 }
 /* No side effect */
