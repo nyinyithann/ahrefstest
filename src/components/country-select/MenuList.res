@@ -94,7 +94,7 @@ let makeMenuList = (props: ReactSelect.Select.menuListProps) => {
     switch Js.Nullable.toOption(list.current) {
     | Some(l) =>
       if currentIndex >= 0 {
-         Util.debounce(() => scrollToItem(l, currentIndex, #smart), 100)()
+         Util.debounce(() => scrollToItem(l, currentIndex, #smart), 120)()
       }
     | None => ()
     }
@@ -103,7 +103,6 @@ let makeMenuList = (props: ReactSelect.Select.menuListProps) => {
 
   let {getStyles} = props
   let menuListStyle = getStyles("menuList", props)
-  Js.log(menuListStyle)
 
   <div id="react-window-menu-list" className={styles["main"]} >
     <ReactWindow.List
@@ -125,7 +124,7 @@ let makeMenuList = (props: ReactSelect.Select.menuListProps) => {
       itemSize={index =>
         measuredHeights->Belt.Map.get(index)->Belt.Option.getWithDefault(defaultRowItemHeight)}
       itemData={rows}
-      overscanCount={0}
+      overscanCount={2}
       ref={ReactDOM.Ref.domRef(list)}>
       {({data, index, style}) => {
         <div key={string_of_int(index)} style>

@@ -108,7 +108,7 @@ function makeMenuList(props) {
           if (!(l == null) && currentIndex >= 0) {
             Util.debounce((function (param) {
                       l.scrollToItem(currentIndex, "smart");
-                    }), 100)(undefined);
+                    }), 120)(undefined);
           }
           
         }), [
@@ -117,7 +117,6 @@ function makeMenuList(props) {
         list
       ]);
   var menuListStyle = Curry._2(props.getStyles, "menuList", props);
-  console.log(menuListStyle);
   return React.createElement("div", {
               className: styles.main,
               id: "react-window-menu-list"
@@ -145,7 +144,7 @@ function makeMenuList(props) {
                   initialScrollOffset: 0,
                   estimatedItemSize: 25,
                   ref: list,
-                  overscanCount: 0,
+                  overscanCount: 2,
                   itemData: rows,
                   children: (function (param) {
                       var index = param.index;

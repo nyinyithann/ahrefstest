@@ -81,11 +81,12 @@ module TargetButton = {
       | Some(country) => country.label
       | None => "Country"
       }->React.string}
-      <DownIcon />
+      <DownIcon ?className />
     </button>
   }
 }
 
+let selectListWidth = "250px"
 let selectStyles = ReactSelect.Select.injectedStyles(
   ~menu=provided =>
     ReactDOM.Style.combine(
@@ -94,7 +95,7 @@ let selectStyles = ReactSelect.Select.injectedStyles(
         ~marginTop="0",
         ~borderTopLeftRadius="0",
         ~borderTopRightRadius="0",
-        ~width="250px",
+        ~width=selectListWidth,
         (),
       ),
     ),
@@ -102,21 +103,20 @@ let selectStyles = ReactSelect.Select.injectedStyles(
     ReactDOM.Style.combine(
       provided,
       ReactDOM.Style.make(
-        ~margin="0px 10px",
+        ~padding="0px 10px",
         ~borderColor="transparent",
         ~borderBottomLeftRadius="0",
         ~borderBottomRightRadius="0",
         ~borderStyle="none",
         ~borderWidth="0",
         ~boxShadow="none",
-        ~width="230px",
+        ~width=selectListWidth,
         (),
       ),
     ),
   ~option=provided =>
     ReactDOM.Style.combine(provided, ReactDOM.Style.make(~padding="4px 4px 4px 8px", ())),
-  ~menuList=provided =>
-    ReactDOM.Style.combine(provided, ReactDOM.Style.make(~width="250px", ())),
+  ~menuList=provided => ReactDOM.Style.combine(provided, ReactDOM.Style.make(~width=selectListWidth, ())),
   (),
 )
 
@@ -142,39 +142,39 @@ let make = (
     None
   }, [countries])
 
-    <Dropdown
-      isOpen
-      onClose={() => setIsOpen(_ => false)}
-      target={<TargetButton ?className ?value toggleOpen={() => setIsOpen(prev => !prev)} />}>
-      <Select
-        ?value
-        classNamePrefix="country-select"
-        multi={false}
-        autoFocus={true}
-        menuIsOpen={true}
-        ignoreAccents={false}
-        backspaceRemovesValue={false}
-        controlShouldRenderValue={false}
-        hideSelectedOptions={false}
-        isClearable={false}
-        options={countries}
-        placeholder={"Search"}
-        filterOption={ReactSelect.Select.createFilter({ReactSelect.Select.ignoreAccents: true})}
-        components={Components.getComponents}
-        styles={selectStyles}
-        onChange={country =>
-          switch Js.Nullable.toOption(country) {
-          | Some(c) => {
-              setValue(_ => Some(c))
-              setIsOpen(_ => false)
-              switch onChange {
-              | Some(change) => change(c)
-              | None => ()
-              }
+  <Dropdown
+    isOpen
+    onClose={() => setIsOpen(_ => false)}
+    target={<TargetButton ?className ?value toggleOpen={() => setIsOpen(prev => !prev)} />}>
+    <Select
+      ?value
+      classNamePrefix="country-select"
+      multi={false}
+      autoFocus={true}
+      menuIsOpen={true}
+      ignoreAccents={false}
+      backspaceRemovesValue={false}
+      controlShouldRenderValue={false}
+      hideSelectedOptions={false}
+      isClearable={false}
+      options={countries}
+      placeholder={"Search"}
+      filterOption={ReactSelect.Select.createFilter({ReactSelect.Select.ignoreAccents: true})}
+      components={Components.getComponents}
+      styles={selectStyles}
+      onChange={country =>
+        switch Js.Nullable.toOption(country) {
+        | Some(c) => {
+            setValue(_ => Some(c))
+            setIsOpen(_ => false)
+            switch onChange {
+            | Some(change) => change(c)
+            | None => ()
             }
+          }
 
-          | _ => ()
-          }}
-      />
-    </Dropdown>
+        | _ => ()
+        }}
+    />
+  </Dropdown>
 }

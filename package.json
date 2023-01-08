@@ -73,7 +73,7 @@
         "prettier": "npx prettier --write --config prettier.config.js 'build/*.js' 'build/**/*.js' 'src/*.{js,jsx,css}' 'src/**/*.{js,jsx,css}' 'style/*.css' --check",
         "build:prod": "NODE_ENV=production rescript clean && rescript build && webpack --config build/webpack.js --env env=prod",
         "build:dev": "NODE_ENV=development rescript clean && rescript build && webpack --config build/webpack.js --env env=dev",
-        "start:all": "concurrently --raw \"rescript build -w\" \"TAILWIND_MODE=watch NODE_ENV=development webpack serve --config build/webpack.js --env env=dev\" ",
+        "start:all": "concurrently --raw \"rescript build -w\" \"NODE_ENV=development webpack serve --config build/webpack.js --env env=dev\" ",
         "start": "NODE_ENV=development webpack serve --config build/webpack.js --env env=dev",
         "build:res": "rescript",
         "clean:res": "rescript clean",

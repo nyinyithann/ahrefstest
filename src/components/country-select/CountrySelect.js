@@ -90,24 +90,30 @@ function CountrySelect$TargetButton(Props) {
   var toggleOpen = Props.toggleOpen;
   var defaultStyle = styles["target-button"];
   var cn = className !== undefined ? "" + className + " " + defaultStyle + "" : defaultStyle;
+  var tmp = {};
+  if (className !== undefined) {
+    tmp.className = className;
+  }
   return React.createElement("button", {
               className: cn,
               type: "button",
               onClick: (function (param) {
                   Curry._1(toggleOpen, undefined);
                 })
-            }, value !== undefined ? value.label : "Country", React.createElement(DownIcon.make, {}));
+            }, value !== undefined ? value.label : "Country", React.createElement(DownIcon.make, tmp));
 }
 
 var TargetButton = {
   make: CountrySelect$TargetButton
 };
 
+var selectListWidth = "250px";
+
 var selectStyles = {
   menu: (function (provided) {
       return Object.assign({}, provided, {
                   marginTop: "0",
-                  width: "250px",
+                  width: selectListWidth,
                   borderTopLeftRadius: "0",
                   borderTopRightRadius: "0"
                 });
@@ -117,8 +123,8 @@ var selectStyles = {
                   borderColor: "transparent",
                   borderStyle: "none",
                   borderWidth: "0",
-                  margin: "0px 10px",
-                  width: "230px",
+                  padding: "0px 10px",
+                  width: selectListWidth,
                   borderBottomLeftRadius: "0",
                   borderBottomRightRadius: "0",
                   boxShadow: "none"
@@ -131,7 +137,7 @@ var selectStyles = {
     }),
   menuList: (function (provided) {
       return Object.assign({}, provided, {
-                  width: "250px"
+                  width: selectListWidth
                 });
     })
 };
@@ -229,6 +235,7 @@ export {
   ValueItem ,
   Components ,
   TargetButton ,
+  selectListWidth ,
   selectStyles ,
   make$2 as make,
 }

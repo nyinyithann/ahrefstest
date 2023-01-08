@@ -1,4 +1,4 @@
-type props<'a> = {data: 'a}
+type optionProps<'a> = {data: 'a}
 
 type rec menuListProps = {
   children: React.element,
@@ -15,7 +15,7 @@ type components = {
   @as("ValueContainer")
   valueContainerComp: React.component<{.}>,
   @as("Option")
-  optionComp: React.component<props<ViewModel.country>>,
+  optionComp: React.component<optionProps<ViewModel.country>>,
   @as("MenuList")
   menuListComp: React.component<menuListProps>,
   @as("NoOptionsMessage")
@@ -37,7 +37,7 @@ type customComponents = {
   @optional @as("ValueContainer")
   valueContainer: React.componentLike<{.}, React.element>,
   @optional @as("Option")
-  option: React.componentLike<props<ViewModel.country>, React.element>,
+  option: React.componentLike<optionProps<ViewModel.country>, React.element>,
   @optional @as("MenuList")
   menuList: React.componentLike<menuListProps, React.element>,
   @optional @as("NoOptionsMessage")
