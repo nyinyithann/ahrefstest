@@ -69,6 +69,7 @@ let getCountries = (
     {
       method: #GET,
       headers: Headers.fromArray([contentType]),
+      cache: #"no-cache",
       ?signal,
     },
   )

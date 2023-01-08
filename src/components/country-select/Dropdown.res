@@ -16,10 +16,6 @@ let make = (
   <div className={styles["dropdown-container"]} onKeyDown={handleKeyDown}>
     {target}
     {isOpen ? <div className={styles["dropdown-menu"]}> children </div> : React.null}
-    {isOpen
-      ? <div
-          className={styles["overlay-blanket"]} onClick={_ => onClose()} 
-        />
-      : React.null}
+    {isOpen ? <div className={styles["overlay-blanket"]} onClick={_ => onClose()} /> : React.null}
   </div>
 }

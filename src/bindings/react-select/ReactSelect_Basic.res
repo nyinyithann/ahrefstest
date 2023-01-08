@@ -1,10 +1,11 @@
 type props<'a> = {data: 'a}
 
-type menuListProps = {
+type rec menuListProps = {
   children: React.element,
   maxHeight: int,
   hasValue: bool,
   innerRef: ReactDOM.Ref.t,
+  getStyles: (string, menuListProps) => ReactDOM.Style.t 
 }
 
 @deriving(abstract)
@@ -53,6 +54,8 @@ type injectedStyles = {
   control: styler,
   @optional
   option: styler,
+  @optional
+  menuList: styler,
 }
 
 @module("react-select") @react.component

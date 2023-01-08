@@ -94,17 +94,22 @@ let makeMenuList = (props: ReactSelect.Select.menuListProps) => {
     switch Js.Nullable.toOption(list.current) {
     | Some(l) =>
       if currentIndex >= 0 {
-         Util.debounce(() => scrollToItem(l, currentIndex, #smart), 90)()
+         Util.debounce(() => scrollToItem(l, currentIndex, #smart), 100)()
       }
     | None => ()
     }
     None
   }, (currentIndex, rows, list))
 
+  let {getStyles} = props
+  let menuListStyle = getStyles("menuList", props)
+  Js.log(menuListStyle)
+
   <div id="react-window-menu-list" className={styles["main"]} >
     <ReactWindow.List
       className={styles["scrollbar"]}
-      width={Util.NumberOrString.int(300)}
+      style={menuListStyle}
+      width={Util.NumberOrString.string("100%")}
       height={Util.NumberOrString.int(Js.Math.min_int(menuHeight, 200))}
       itemCount={rows->Array.length}
       estimatedItemSize={defaultRowItemHeight}

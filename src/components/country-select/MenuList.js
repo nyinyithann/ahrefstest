@@ -108,7 +108,7 @@ function makeMenuList(props) {
           if (!(l == null) && currentIndex >= 0) {
             Util.debounce((function (param) {
                       l.scrollToItem(currentIndex, "smart");
-                    }), 90)(undefined);
+                    }), 100)(undefined);
           }
           
         }), [
@@ -116,12 +116,14 @@ function makeMenuList(props) {
         rows,
         list
       ]);
+  var menuListStyle = Curry._2(props.getStyles, "menuList", props);
+  console.log(menuListStyle);
   return React.createElement("div", {
               className: styles.main,
               id: "react-window-menu-list"
             }, React.createElement(ReactWindow.VariableSizeList, {
                   className: styles.scrollbar,
-                  width: Util.NumberOrString.$$int(300),
+                  width: Util.NumberOrString.string("100%"),
                   height: Util.NumberOrString.$$int(Math.min(menuHeight, 200)),
                   itemCount: rows.length,
                   itemSize: (function (index) {
@@ -155,7 +157,8 @@ function makeMenuList(props) {
                                       setMeasuredHeight: setMeasuredHeight,
                                       child: Caml_array.get(param.data, index)
                                     }));
-                    })
+                    }),
+                  style: menuListStyle
                 }));
 }
 

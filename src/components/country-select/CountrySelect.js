@@ -85,10 +85,13 @@ var Components = {
 };
 
 function CountrySelect$TargetButton(Props) {
+  var className = Props.className;
   var value = Props.value;
   var toggleOpen = Props.toggleOpen;
+  var defaultStyle = styles["target-button"];
+  var cn = className !== undefined ? "" + className + " " + defaultStyle + "" : defaultStyle;
   return React.createElement("button", {
-              className: styles["target-button"],
+              className: cn,
               type: "button",
               onClick: (function (param) {
                   Curry._1(toggleOpen, undefined);
@@ -104,6 +107,7 @@ var selectStyles = {
   menu: (function (provided) {
       return Object.assign({}, provided, {
                   marginTop: "0",
+                  width: "250px",
                   borderTopLeftRadius: "0",
                   borderTopRightRadius: "0"
                 });
@@ -114,6 +118,7 @@ var selectStyles = {
                   borderStyle: "none",
                   borderWidth: "0",
                   margin: "0px 10px",
+                  width: "230px",
                   borderBottomLeftRadius: "0",
                   borderBottomRightRadius: "0",
                   boxShadow: "none"
@@ -122,6 +127,11 @@ var selectStyles = {
   option: (function (provided) {
       return Object.assign({}, provided, {
                   padding: "4px 4px 4px 8px"
+                });
+    }),
+  menuList: (function (provided) {
+      return Object.assign({}, provided, {
+                  width: "250px"
                 });
     })
 };
@@ -156,6 +166,9 @@ function CountrySelect(Props) {
               }));
       })
   };
+  if (className !== undefined) {
+    tmp.className = className;
+  }
   if (value !== undefined) {
     tmp.value = Caml_option.valFromOption(value);
   }
@@ -193,22 +206,19 @@ function CountrySelect(Props) {
         
       })
   };
-  if (className !== undefined) {
-    tmp$1.className = className;
-  }
   if (value !== undefined) {
     tmp$1.value = Caml_option.valFromOption(value);
   }
-  return React.createElement(React.Fragment, undefined, React.createElement(Dropdown.make, {
-                  isOpen: match[0],
-                  target: React.createElement(CountrySelect$TargetButton, tmp),
-                  children: React.createElement(ReactSelect, tmp$1),
-                  onClose: (function (param) {
-                      Curry._1(setIsOpen, (function (param) {
-                              return false;
-                            }));
-                    })
-                }));
+  return React.createElement(Dropdown.make, {
+              isOpen: match[0],
+              target: React.createElement(CountrySelect$TargetButton, tmp),
+              children: React.createElement(ReactSelect, tmp$1),
+              onClose: (function (param) {
+                  Curry._1(setIsOpen, (function (param) {
+                          return false;
+                        }));
+                })
+            });
 }
 
 var make$2 = CountrySelect;

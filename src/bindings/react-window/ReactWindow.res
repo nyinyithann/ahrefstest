@@ -3,11 +3,11 @@ open Util
 type childRenderProps = {data: array<React.element>, index: int, style: ReactDOM.Style.t}
 
 type innerProps = {
-    children: React.element,
-    style: ReactDOM.Style.t
+  children: React.element,
+  style: ReactDOM.Style.t,
 }
 
-type innerElementType = React.componentLike<innerProps, React.element> 
+type innerElementType = React.componentLike<innerProps, React.element>
 
 module List = {
   @module("react-window") @react.component
@@ -25,5 +25,6 @@ module List = {
     ~overscanCount: int=?,
     ~itemData: array<React.element>,
     ~children: childRenderProps => React.element,
+    ~style: ReactDOM.Style.t,
   ) => React.element = "VariableSizeList"
-} 
+}

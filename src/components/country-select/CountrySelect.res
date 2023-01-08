@@ -66,8 +66,17 @@ module Components = {
 
 module TargetButton = {
   @react.component
-  let make = (~value: option<ViewModel.country>=?, ~toggleOpen: unit => unit) => {
-    <button type_="button" className={styles["target-button"]} onClick={_ => toggleOpen()}>
+  let make = (
+    ~className: option<string>=?,
+    ~value: option<ViewModel.country>=?,
+    ~toggleOpen: unit => unit,
+  ) => {
+    let defaultStyle = styles["target-button"]
+    let cn = switch className {
+    | Some(c) => `${c} ${defaultStyle}`
+    | None => defaultStyle
+    }
+    <button type_="button" className={cn} onClick={_ => toggleOpen()}>
       {switch value {
       | Some(country) => country.label
       | None => "Country"
@@ -81,7 +90,13 @@ let selectStyles = ReactSelect.Select.injectedStyles(
   ~menu=provided =>
     ReactDOM.Style.combine(
       provided,
-      ReactDOM.Style.make(~marginTop="0", ~borderTopLeftRadius="0", ~borderTopRightRadius="0", ()),
+      ReactDOM.Style.make(
+        ~marginTop="0",
+        ~borderTopLeftRadius="0",
+        ~borderTopRightRadius="0",
+        ~width="250px",
+        (),
+      ),
     ),
   ~control=provided =>
     ReactDOM.Style.combine(
@@ -94,23 +109,28 @@ let selectStyles = ReactSelect.Select.injectedStyles(
         ~borderStyle="none",
         ~borderWidth="0",
         ~boxShadow="none",
+        ~width="230px",
         (),
       ),
     ),
   ~option=provided =>
     ReactDOM.Style.combine(provided, ReactDOM.Style.make(~padding="4px 4px 4px 8px", ())),
+  ~menuList=provided =>
+    ReactDOM.Style.combine(provided, ReactDOM.Style.make(~width="250px", ())),
   (),
 )
 
 @react.component
 let make = (
-  ~country: option<string>=?,
+  ~country: option<string>,
   ~className: option<string>=?,
   ~onChange: option<ViewModel.country => unit>=?,
 ) => {
   let (isOpen, setIsOpen) = React.useState(() => false)
   let (value, setValue) = React.useState(() => None)
-  let (_, _, countries) = DataProvider.useCountriesData()
+
+  // loading and error handling are ignored for this test
+  let (_loading, _error, countries) = DataProvider.useCountriesData()
 
   React.useEffect1(() => {
     open Js.String2
@@ -122,16 +142,11 @@ let make = (
     None
   }, [countries])
 
-  <>
-    /* { */
-    /* true ? <span>{"loading"->React.string}</span> : React.null */
-    /* } */
     <Dropdown
       isOpen
       onClose={() => setIsOpen(_ => false)}
-      target={<TargetButton ?value toggleOpen={() => setIsOpen(prev => !prev)} />}>
+      target={<TargetButton ?className ?value toggleOpen={() => setIsOpen(prev => !prev)} />}>
       <Select
-        ?className
         ?value
         classNamePrefix="country-select"
         multi={false}
@@ -162,5 +177,4 @@ let make = (
           }}
       />
     </Dropdown>
-  </>
 }
